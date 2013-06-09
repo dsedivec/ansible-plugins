@@ -1,0 +1,98 @@
+#!/usr/bin/env python
+
+DOCUMENTATION = '''
+module: augtool
+short_description: Modifies configuration files using Augeas
+description:
+  - Uses the augtool utility to modify configuration files through the
+    Augeas library.
+author: Dale Sedivec <dale@codefu.org>
+requirements:
+  - augtool
+options:
+  commands:
+    description:
+      - Either a list of augtool commands, or else a newline-separated
+        list of commands
+    required: true
+  backup:
+    description:
+      - Whether or not to make a backup of the files changed (passes
+        C(--backup) to augtool)
+    required: false
+    choices: [yes, no]
+    default: yes
+notes:
+  - Unfortunately, this module really has no idempotency itself.  It's
+    up to you to write idempotent augtool scripts, though that's
+    pretty easy to do.
+'''
+
+EXAMPLES = '''
+# YAML gives us a nice way of providing multiple augtool commands,
+# separated by newlines.
+#
+# I'm escaping the $'s so Ansible doesn't eat them and augtool sees them.
+action: augtool
+args:
+  commands: |
+    defvar vsftpd /files/etc/vsftpd/vsftpd.conf
+    set \$vsftpd/xferlog_std_format NO
+    set \$vsftpd/log_ftp_protocol YES
+
+# Or provide the commands as a list.
+action: augtool
+args:
+  commands:
+    - rm /files/etc/mdadm.conf/array[uuid = "{{ uuid }}"]
+    - rm /files/etc/fstab/*[file = "/srv/storage/storage1"]
+
+# Or provide the commands from a template.
+action: augtool
+args:
+  commands: $TEMPLATE(samba.augtool.j2)
+'''
+
+# This uses the augtool program rather than any Augeas Python bindings
+# because CentOS doesn't come with Augeas Python bindings (though EPEL
+# does).  Using augtool was ultimately easier, too.  Finally, I
+# couldn't see any way to find out how many files were changed through
+# the Augeas API, though it's presumably possible since augtool does
+# it.
+
+
+import re
+
+
+def main():
+    module = AnsibleModule(
+        argument_spec=dict(
+            commands=dict(required=True),
+            backup=dict(choices=BOOLEANS, default=True)
+            ),
+        supports_check_mode=True,
+        )
+
+    params = module.params
+    commands = params["commands"]
+    if isinstance(commands, list):
+        commands = "\n".join(commands)
+    backup = module.boolean(params["backup"])
+
+    cmd = ["augtool"]
+    if backup:
+        cmd.append("--backup")
+    if module.check_mode:
+        commands += "\nset /augeas/save noop"
+    commands += "\nsave\nprint /augeas//error\n"
+    status, out, err = module.run_command(cmd, data=commands)
+    if status != 0:
+        module.fail_json(rc=status, msg="augtool errors:\n" + err)
+    else:
+        changed = bool(re.search(r"(^|\n)Saved \d+ file\(s\)\s*$", out))
+        module.exit_json(changed=changed, rc=status, msg=out, stderr=err)
+
+
+# include magic from lib/ansible/module_common.py
+#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
+main()
