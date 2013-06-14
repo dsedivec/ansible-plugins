@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-DESCRIPTION = '''
+DOCUMENTATION = '''
 module: symlink
 short_description: Make relative symbolic links
 description:

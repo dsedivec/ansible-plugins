@@ -24,7 +24,7 @@ options:
     default: yes
 notes:
   - Unfortunately, this module really has no idempotency itself.  It's
-    up to you to write idempotent augtool scripts, though that's
+    up to you to write idempotent augtool scripts.  Thankfully, that's
     pretty easy to do.
 '''
 
@@ -50,7 +50,7 @@ args:
 # Or provide the commands from a template.
 action: augtool
 args:
-  commands: $TEMPLATE(samba.augtool.j2)
+  commands: {{ lookup('template', 'samba.augtool.j2') }}
 '''
 
 # This uses the augtool program rather than any Augeas Python bindings

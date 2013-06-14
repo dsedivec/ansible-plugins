@@ -8,13 +8,13 @@ description:
     The YAML file is expected to be a YAML associative array mapping
     variables to their values.  Each variable is set as a host
     variable on every host this module is run against.
-  - One name is special: if a C(hosts) key is found, it is expected to
-    have an associative array beneath it, the keys of which are host
-    names and the values of which are themselves associative arrays of
-    variables to be set on that specific host.  This allows setting
-    variables on specific hosts, though note that only the hosts you
-    run this module against will be affected regardless of the
-    contents of the C(hosts) key.
+  - "One name is special: if a C(hosts) key is found, it is expected
+    to have an associative array beneath it, the keys of which are
+    host names and the values of which are themselves associative
+    arrays of variables to be set on that specific host.  This allows
+    setting variables on specific hosts, though note that only the
+    hosts you run this module against will be affected regardless of
+    the contents of the C(hosts) key."
   - "C(gpg) is used to decrypt the file.  In theory either version 1
     or version 2 will work, though this module has mostly been tested
     with version 2.  You may want to use C(gpg-agent) to prompt for
