@@ -1,0 +1,6 @@
+exclude:
+  - Makefile
+  - '*_plugins'
+  - library
+  - index-header.yaml
+markdown: redcarpet
