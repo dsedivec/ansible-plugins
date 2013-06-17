@@ -12,7 +12,7 @@ system configurations.
   want to edit a configuration file rather than replace it (e.g. with
   Ansible's built-in `template` module).
 
-* [`load_gpg_vars` module][log_gpg_vars_mod]: Load host variables from
+* [`load_gpg_vars` module][load_gpg_vars_mod]: Load host variables from
   an encrypted YAML file.  This is a quirky module but it can be
   useful for keeping information such as passwords for new user
   accounts you want to set up when provisioning a system.
@@ -38,5 +38,5 @@ system configurations.
 
 [augtool_mod]: http://dsedivec.github.io/ansible-plugins/#augtool
 [augtool]: http://augeas.net/tour.html
-[log_gpg_vars_mod]: http://dsedivec.github.io/ansible-plugins/#load_gpg_vars
+[load_gpg_vars_mod]: http://dsedivec.github.io/ansible-plugins/#load_gpg_vars
 [symlink_mod]: http://dsedivec.github.io/ansible-plugins/#symlink
