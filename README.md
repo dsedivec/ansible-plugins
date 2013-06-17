@@ -5,6 +5,8 @@ coming up with [Ansible](http://www.ansibleworks.com/) playbooks for
 my network.  Ansible is a lightweight and simple system for managing
 system configurations.
 
+This software has the same license as Ansible, GPLv3.
+
 ## What's here
 
 * [`augtool` module][augtool_mod]: Modify configuration files using
