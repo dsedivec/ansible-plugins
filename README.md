@@ -1,8 +1,8 @@
 # Various plug-ins for Ansible
 
 These are a small collection of modules and plug-ins I created while
-coming up with [Ansible](http://www.ansible.cc/) playbooks for my
-network.  Ansible is a lightweight and simple system for managing
+coming up with [Ansible](http://www.ansibleworks.com/) playbooks for
+my network.  Ansible is a lightweight and simple system for managing
 system configurations.
 
 ## What's here
