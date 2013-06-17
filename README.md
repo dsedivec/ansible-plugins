@@ -32,6 +32,20 @@ system configurations.
   I used this when making IPTables rules, which needed an IP address,
   but where I didn't want to "hard code" the IP in my playbook.
 
+* `hash` filter plug-in: If you have
+  [passlib](http://pythonhosted.org/passlib/) installed, you can use
+  this filter plug-in to hash passwords.  For example:
+
+        {{ plain_text_password|hash("sha512_crypt", salt_size=16) }}
+
+  See <http://pythonhosted.org/passlib/lib/passlib.hash.html> for a
+  list of supported hashes and their arguments.
+
+  This filter could be particularly useful in conjunction with plain
+  text passwords kept in a GPG file using the `load_gpg_vars` module,
+  above.  See [that module's documentation][load_gpg_vars_mod] for an
+  example.
+
 * `regexp_escape` filter plug-in: Gives you a `regexp_escape` filter.
   This can be useful when, for example, you're interpolating variables
   into the `regexp` argument of the built-in `lineinfile` module.

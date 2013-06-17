@@ -52,4 +52,30 @@ hosts:
     my_var_4:
       first_key: first val
       second_key: second val
+
+#
+# A slightly more realistic example: clients authenticating to the
+# file server to mount a shared file system.
+#
+
+- hosts: all
+  tasks:
+    - load_gpg_vars: path=secrets.yaml.gpg
+
+- hosts: file-servers
+  tasks:
+    - user: >
+        state=present name=client shell=/sbin/nologin
+        password={{ client_password|hash("sha512_crypt") }}
+
+- hosts: clients
+  tasks:
+    - copy: dest=/etc/mount.credentials owner=root mode=0600
+      args:
+        content: |
+          username=client
+          password={{ client_password }}
+
+# In secrets.yaml.gpg:
+client_password: password1
 '''
