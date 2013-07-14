@@ -34,6 +34,15 @@ options:
     description:
       - The path to the symbolic link
     required: true
+  force:
+    description:
+      - "If true, the link will be created even if the src doesn't
+        exist, or if the dest is a file that needs to be unlinked
+        before being replaced with a symlink."
+    choices:
+      - "yes"
+      - "no"
+    default: "no"
 '''
 
 EXAMPLES = '''
@@ -47,6 +56,7 @@ EXAMPLES = '''
 
 import os
 import os.path
+import stat
 
 
 def main():
@@ -54,6 +64,7 @@ def main():
         argument_spec=dict(
             src=dict(required=True),
             path=dict(required=True),
+            force=dict(default=False, type="bool"),
             ),
         supports_check_mode=True,
         )
@@ -61,32 +72,43 @@ def main():
     params = module.params
     src = params["src"]
     path = params["path"]
+    force = params["force"]
 
-    if os.path.isabs(src):
-        abs_src = src
-    else:
-        abs_src = os.path.join(os.path.dirname(path), src)
-    if not os.path.exists(abs_src):
-        module.fail_json(msg="src=%r doesn't exist" % (abs_src,))
-
-    create_symlink = True
+    if not force:
+        if os.path.isabs(src):
+            abs_src = src
+        else:
+            abs_src = os.path.join(os.path.dirname(path), src)
+        if not os.path.exists(abs_src):
+            module.fail_json(msg="src=%r doesn't exist" % (abs_src,))
     if not os.path.isabs(path):
         module.fail_json(msg="path must be absolute")
-    elif os.path.exists(path):
-        if not os.path.islink(path):
+
+    should_create_link = True
+    try:
+        path_stat = os.lstat(path)
+    except OSError, ex:
+        # ENOENT for "doesn't exist" is fine, other things are not.
+        if ex.errno == errno.ENOENT:
+            path_stat = None
+        else:
+            module.fail_json(msg="failure to stat %r: %s" % (path, ex))
+    else:
+        if stat.S_ISLNK(path_stat.st_mode):
+            current_src = os.readlink(path)
+            if current_src == src:
+                should_create_link = False
+        elif not force:
             msg = ("%r exists but is not a symlink, I will not clobber it" %
                    (path,))
             module.fail_json(msg=msg)
-        current_src = os.readlink(path)
-        if current_src == src:
-            create_symlink = False
-        elif not module.check_mode:
-            os.unlink(path)
 
-    if create_symlink and not module.check_mode:
+    if should_create_link and not module.check_mode:
+        if path_stat:
+            os.unlink(path)
         os.symlink(src, path)
 
-    module.exit_json(changed=create_symlink)
+    module.exit_json(changed=should_create_link)
 
 
 # include magic from lib/ansible/module_common.py
