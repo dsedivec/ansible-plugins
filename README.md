@@ -22,10 +22,6 @@ This software has the same license as Ansible, GPLv3.
   Note: this should probably be replaced by [`ansible-vault`][vault]
   once Ansible 1.5 is released.
 
-* [`symlink` module][symlink_mod]: A module that solely creates symbolic
-  links.  Its main selling point, and where it differs from Ansible's
-  built-in `file` module, is that it lets you create relative links.
-
 * `dns` lookup plug-in: Lets you resolve host names to their IP
   addresses.  This very simple module just calls `gethostbyname` for
   now, so it surely won't cover all use cases, and it definitely
