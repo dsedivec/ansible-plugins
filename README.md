@@ -19,6 +19,9 @@ This software has the same license as Ansible, GPLv3.
   useful for keeping information such as passwords for new user
   accounts you want to set up when provisioning a system.
 
+  Note: this should probably be replaced by [`ansible-vault`][vault]
+  once Ansible 1.5 is released.
+
 * [`symlink` module][symlink_mod]: A module that solely creates symbolic
   links.  Its main selling point, and where it differs from Ansible's
   built-in `file` module, is that it lets you create relative links.
@@ -56,3 +59,4 @@ This software has the same license as Ansible, GPLv3.
 [augtool]: http://augeas.net/tour.html
 [load_gpg_vars_mod]: http://dsedivec.github.io/ansible-plugins/#load_gpg_vars
 [symlink_mod]: http://dsedivec.github.io/ansible-plugins/#symlink
+[vault]: http://blog.ansibleworks.com/2014/02/19/ansible-vault/
