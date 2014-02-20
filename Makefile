@@ -1,5 +1,6 @@
-ANSIBLE_HACKING = ../ansible/hacking
+#ANSIBLE_HACKING = ../ansible/hacking
 FORMATTER = $(ANSIBLE_HACKING)/module_formatter.py
+FORMATTER = module_formatter.py
 #TEMPLATES = $(ANSIBLE_HACKING)/templates
 TEMPLATES = _templates
 FORMATTER_TARGET = markdown
@@ -19,7 +20,8 @@ index.md: index-header.yaml
 	done
 
 $(BUILD_DIR)/%.md: $(LIBRARY_DIR)/% $(BUILD_DIR) $(FORMATTER) $(TEMPLATES)/$(FORMATTER_TARGET).j2
-	$(FORMATTER) -T $(TEMPLATES) -t markdown -M . -m $* -o $(BUILD_DIR)
+	python $(FORMATTER) -T $(TEMPLATES) -t markdown -M . -m $* \
+	                    -o $(BUILD_DIR)
 # $(FORMATTER) -T $(TEMPLATES) -t rst -M . -m $* |\
 # 	pandoc -f rst -t markdown_github > $@
 
