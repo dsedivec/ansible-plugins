@@ -101,7 +101,10 @@ def main():
     if module.check_mode:
         commands += "\nset /augeas/save noop"
     commands += "\nsave\nprint /augeas//error\n"
-    status, out, err = module.run_command(cmd, data=commands)
+    # binary_data=True is a workaround because otherwise run_command
+    # will add r'\n' to stdin.
+    # https://github.com/ansible/ansible/pull/6084
+    status, out, err = module.run_command(cmd, data=commands, binary_data=True)
     if status != 0:
         module.fail_json(rc=status, msg="augtool errors:\n" + err)
     else:
