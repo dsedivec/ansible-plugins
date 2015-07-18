@@ -57,7 +57,7 @@ This software has the same license as Ansible, GPLv3.
 
         ansible-playbook setup.yml --vault-password-file vault_from_gpg_agent.py
   
-  The script must be executable (chmod +x).
+  The script must be executable (`chmod +x vault_from_gpg_agent.py`).
 
 [augtool_mod]: http://dsedivec.github.io/ansible-plugins/#augtool
 [augtool]: http://augeas.net/tour.html
