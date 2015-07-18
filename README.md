@@ -51,6 +51,14 @@ This software has the same license as Ansible, GPLv3.
   This can be useful when, for example, you're interpolating variables
   into the `regexp` argument of the built-in `lineinfile` module.
 
+* `vault_from_gpg_agent.py` script that allows ansible's vault to read
+  its password via gpg-agent. See this [mailing_list_post] for the
+  rationale. The script can be used like this:
+
+        ansible-playbook setup.yml --vault-password-file vault_from_gpg_agent.py
+  
+  The script must be executable (chmod +x).
+
 [augtool_mod]: http://dsedivec.github.io/ansible-plugins/#augtool
 [augtool]: http://augeas.net/tour.html
 [load_gpg_vars_mod]: http://dsedivec.github.io/ansible-plugins/#load_gpg_vars
