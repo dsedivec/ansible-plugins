@@ -51,17 +51,19 @@ This software has the same license as Ansible, GPLv3.
   This can be useful when, for example, you're interpolating variables
   into the `regexp` argument of the built-in `lineinfile` module.
 
-* `vault_from_gpg_agent.py` script that allows `ansible`'s `vault` to
-  read its password via `gpg-agent`. See this [mailing_list_post] for
-  the rationale. The script can be used like this:
-
-        ansible-playbook setup.yml --vault-password-file vault_from_gpg_agent.py
-  
-  The script must be executable (`chmod +x vault_from_gpg_agent.py`).
+* `vault_from_gpg_agent.py`: A script that allows Ansible Vault to
+  read its passphrase via `gpg-agent`, which can (relatively) securely
+  keep your passphrase in memory and save you from having to enter it
+  every time you run `ansible-playbook`. See
+  [this mailing list post][vault GPG announcement] for more details.
+  Use this script by setting `vault_password_file =
+  vault_from_gpg_agent.py` in your Ansible configuration file, or use
+  `--vault-password-file=vault_from_gpg_agent.py` on the command line.
+  Make sure the script is executable!
 
 [augtool_mod]: http://dsedivec.github.io/ansible-plugins/#augtool
 [augtool]: http://augeas.net/tour.html
 [load_gpg_vars_mod]: http://dsedivec.github.io/ansible-plugins/#load_gpg_vars
 [symlink_mod]: http://dsedivec.github.io/ansible-plugins/#symlink
 [vault]: http://blog.ansibleworks.com/2014/02/19/ansible-vault/
-[mailing_list_post]: http://grokbase.com/t/gg/ansible-project/14810bdwye/read-vault-password-using-gpg-agent
+[vault GPG announcement]: https://groups.google.com/d/msg/ansible-project/fHEW71FdPx0/qk8yNZMJzsEJ
